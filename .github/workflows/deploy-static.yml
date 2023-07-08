@@ -62,7 +62,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          name: '${{ github.event.repository.name }}'
+          # name: '${{ github.event.repository.name }}'
           path: './packages/projects/projects/${{ github.event.repository.name }}'
       - name: Sleep for 15 seconds
         run: sleep 15s
@@ -70,3 +70,5 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
+        # with:
+          # name: '${{ github.event.repository.name }}'
