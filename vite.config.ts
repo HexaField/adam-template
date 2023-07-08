@@ -71,8 +71,7 @@ export default defineConfig(async () => {
         target: 'es2020'
       }
     },
-    plugins: [
-    ],
+    plugins: [],
     build: {
       target: 'esnext',
       sourcemap: 'inline',

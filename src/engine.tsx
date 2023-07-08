@@ -23,11 +23,9 @@ All portions of the code written by the Ethereal Engine team are Copyright © 20
 Ethereal Engine. All Rights Reserved.
 */
 
-import React, { createRef, Suspense } from 'react'
-import { useTranslation } from 'react-i18next'
+import React, { Suspense } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 
-import { FullscreenContainer } from '@etherealengine/client-core/src/components/FullscreenContainer'
 import { LoadingCircle } from '@etherealengine/client-core/src/components/LoadingCircle'
 import { PeerID } from '@etherealengine/common/src/interfaces/PeerID'
 import { Engine } from '@etherealengine/engine/src/ecs/classes/Engine'
@@ -45,11 +43,5 @@ getMutableState(EngineState).publicPath.set(
 initializeBrowser()
 
 export default function ({ children }) {
-  const ref = createRef()
-  const { t } = useTranslation()
-  return (
-    <FullscreenContainer ref={ref}>
-      <Suspense fallback={<LoadingCircle message={t('common:loader.connecting')} />}>{children}</Suspense>
-    </FullscreenContainer>
-  )
+  return <Suspense fallback={<LoadingCircle message={'Loading...'} />}>{children}</Suspense>
 }

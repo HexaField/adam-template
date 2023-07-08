@@ -1,3 +1,3 @@
-### Ethereal Engine Project
+### ee-minimalist
 
-This is an Ethereal Engine project.
+Build the client by itself. No servers, lightweight, and entirely customizable.
