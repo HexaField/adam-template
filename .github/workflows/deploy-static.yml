@@ -42,8 +42,6 @@ jobs:
         uses: actions/checkout@v3
         with:
           path: './packages/projects/projects/${{ github.event.repository.name }}'
-      - name: Setup Pages
-        uses: actions/configure-pages@v3
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
@@ -59,6 +57,8 @@ jobs:
       - run: cp .env.local.default .env.local
       - run: npm install --production=false --loglevel notice --legacy-peer-deps
       - run: cd './packages/projects/projects/${{ github.event.repository.name }}' && npm run build
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
@@ -68,4 +68,5 @@ jobs:
         run: sleep 15s
         shell: bash
       - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v2
