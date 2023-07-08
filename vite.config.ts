@@ -36,7 +36,7 @@ export default defineConfig(async () => {
 
   const isDevOrLocal = process.env.APP_ENV === 'development' || process.env.VITE_LOCAL_BUILD === 'true'
 
-  let base = `https://${process.env['APP_HOST'] ? process.env['APP_HOST'] : process.env['VITE_APP_HOST']}/`
+  const base = `https://${process.env['STATIC_BUILD_HOST'] ?? 'localhost:3000'}/`
 
   const returned = {
     server: {
