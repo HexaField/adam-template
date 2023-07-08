@@ -42,9 +42,15 @@ jobs:
           key: ${{ runner.os }}-branch-build-${{ hashFiles('**/package.json') }}
       - run: cp .env.local.default .env.local
       - run: npm install --production=false --loglevel notice --legacy-peer-deps
-      - run: cd './packages/projects/projects/${{ github.event.repository.name }}''
+      - run: cd './packages/projects/projects/${{ github.event.repository.name }}'
       - run: npm run build
       - name: Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-pages-artifact@v1
+        with:
+          name: '${{ github.event.repository.name }}'
+          path: './packages/projects/projects/${{ github.event.repository.name }}'
       - name: Deploy
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@main
+        with:
+          token: ${{ github.token }}
+          url: ${{ steps.deployment.outputs.page_url }}
