@@ -1,0 +1,32 @@
+{
+  "name": "ee-minimalist",
+  "version": "0.0.0",
+  "description": "",
+  "main": "",
+  "etherealEngine": {
+    "version": "1.3.0"
+  },
+  "scripts": {
+    "test:projects": "mocha --config .mocharc.js",
+    "dev": "cross-env APP_ENV=development NODE_OPTIONS=--max_old_space_size=20480 vite",
+    "format": "prettier --write \"**/*.{ts,tsx}\"",
+    "format-scss": "stylelint \"**/*.scss\" --fix",
+    "format-staged": "lint-staged",
+    "precommit": "no-master-commits -b master"
+  },
+  "peerDependencies": {},
+  "dependencies": {},
+  "devDependencies": {},
+  "license": "ISC",
+  "pre-commit": [
+    "format-staged"
+  ],
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "prettier --write"
+    ],
+    "*.scss": [
+      "stylelint --fix"
+    ]
+  }
+}
