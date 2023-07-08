@@ -1,6 +1,6 @@
-# ee-minimalist
+# ee-static-build-template
 
-Build the client by itself. No servers, lightweight, and entirely customizable.
+Build the Ethereal Engine client by itself from scratch.
 
 ## Deploy to github pages
 
