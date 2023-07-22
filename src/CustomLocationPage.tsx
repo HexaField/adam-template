@@ -25,6 +25,7 @@ import { addObjectToGroup } from '@etherealengine/engine/src/scene/components/Gr
 import { NameComponent } from '@etherealengine/engine/src/scene/components/NameComponent'
 import { TransformComponent } from '@etherealengine/engine/src/transform/components/TransformComponent'
 import { TransformSystem } from '@etherealengine/engine/src/transform/systems/TransformSystem'
+import { CameraComponent } from '@etherealengine/engine/src/camera/components/CameraComponent'
 
 const SceneState = defineState({
   name: 'ee.minimalist.SceneState',
@@ -45,7 +46,7 @@ const UpdateSystem = defineSystem({
       transformComponent.rotation.setFromAxisAngle(V_010, elapsedSeconds)
     }
 
-    Engine.instance.camera.lookAt(0, 0, 0)
+    getComponent(Engine.instance.cameraEntity, CameraComponent).lookAt(0, 0, 0)
   },
   reactor: function () {
     const state = getMutableState(SceneState)
