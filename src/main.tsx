@@ -35,8 +35,8 @@ import { LoadingCircle } from '@etherealengine/client-core/src/components/Loadin
 
 ;(globalThis as any).process = { env: { ...(import.meta as any).env, APP_ENV: (import.meta as any).env.MODE } }
 
-const CustomLocationPage = lazy(() => import('./CustomLocationPage'))
 const Engine = lazy(() => import('./engine'))
+const CustomLocationPage = lazy(() => import('./CustomLocationPage'))
 
 const App = () => {
   return (
