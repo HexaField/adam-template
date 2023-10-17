@@ -72,7 +72,7 @@ export default function Template() {
 
   useEffect(() => {
     if (getMutableState(EngineState).isEngineInitialized.value) return
-    dispatchAction(EngineActions.initializeEngine({ initialised: true }))
+    getMutableState(EngineState).isEngineInitialized.set(true)
 
     startClientSystems()
   }, [])
