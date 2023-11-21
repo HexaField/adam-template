@@ -23,17 +23,13 @@ All portions of the code written by the Ethereal Engine team are Copyright © 20
 Ethereal Engine. All Rights Reserved.
 */
 
-import { t } from 'i18next'
-import React, { lazy, Suspense } from 'react'
+/** @ts-ignore */
+;(globalThis as any).process = { env: { ...(import.meta as any).env, APP_ENV: (import.meta as any).env.MODE } }
+
+import React, { lazy } from 'react'
 import { createRoot } from 'react-dom/client'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
 import ErrorBoundary from '@etherealengine/client-core/src/common/components/ErrorBoundary'
-import { LoadingCircle } from '@etherealengine/client-core/src/components/LoadingCircle'
-
-//@ts-ignore
-
-;(globalThis as any).process = { env: { ...(import.meta as any).env, APP_ENV: (import.meta as any).env.MODE } }
 
 const Engine = lazy(() => import('./engine'))
 const CustomLocationPage = lazy(() => import('./CustomLocationPage'))
@@ -41,21 +37,9 @@ const CustomLocationPage = lazy(() => import('./CustomLocationPage'))
 const App = () => {
   return (
     <ErrorBoundary>
-      <BrowserRouter>
-        <Routes>
-          <Route
-            key={'location'}
-            path={'/*'}
-            element={
-              <Suspense fallback={<LoadingCircle message={t('common:loader.starting')} />}>
-                <Engine>
-                  <CustomLocationPage />
-                </Engine>
-              </Suspense>
-            }
-          />
-        </Routes>
-      </BrowserRouter>
+      <Engine>
+        <CustomLocationPage />
+      </Engine>
     </ErrorBoundary>
   )
 }

@@ -25,6 +25,8 @@ Ethereal Engine. All Rights Reserved.
 
 import React, { Suspense } from 'react'
 
+/** @todo due to circular dependences, engine must be imported prior to other imports */
+import '@etherealengine/engine/src/ecs/classes/Engine'
 import { LoadingCircle } from '@etherealengine/client-core/src/components/LoadingCircle'
 import { EngineState } from '@etherealengine/engine/src/ecs/classes/EngineState'
 import { initializeBrowser } from '@etherealengine/engine/src/initializeBrowser'
