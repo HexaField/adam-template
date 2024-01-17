@@ -8,6 +8,7 @@
   },
   "scripts": {
     "test": "mocha --config .mocharc.js",
+    "check-errors": "tsc --noemit",
     "dev": "cross-env APP_ENV=development NODE_OPTIONS=--max_old_space_size=20480 vite",
     "build": "cross-env NODE_OPTIONS=--max_old_space_size=10240 vite build",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
