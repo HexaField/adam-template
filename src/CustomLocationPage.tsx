@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react'
 
 import Debug from '@etherealengine/client-core/src/components/Debug'
-import { EngineState } from '@etherealengine/engine/src/ecs/classes/EngineState'
-import { defineSystem } from '@etherealengine/engine/src/ecs/functions/SystemFunctions'
 import '@etherealengine/engine/src/renderer/WebGLRendererSystem'
 import { defineState, getMutableState, getState } from '@etherealengine/hyperflux'
 
@@ -14,12 +12,11 @@ import 'tailwindcss/tailwind.css'
 
 import { BoxGeometry, Mesh, MeshBasicMaterial } from 'three'
 
+import { Entity, createEntity, defineSystem, getComponent, setComponent } from '@etherealengine/ecs'
+import { ECSState } from '@etherealengine/ecs/src/ECSState'
+import { Engine } from '@etherealengine/ecs/src/Engine'
 import { CameraComponent } from '@etherealengine/engine/src/camera/components/CameraComponent'
 import { V_010 } from '@etherealengine/engine/src/common/constants/MathConstants'
-import { Engine } from '@etherealengine/engine/src/ecs/classes/Engine'
-import { Entity } from '@etherealengine/engine/src/ecs/classes/Entity'
-import { getComponent, setComponent } from '@etherealengine/engine/src/ecs/functions/ComponentFunctions'
-import { createEntity } from '@etherealengine/engine/src/ecs/functions/EntityFunctions'
 import { addObjectToGroup } from '@etherealengine/engine/src/scene/components/GroupComponent'
 import { NameComponent } from '@etherealengine/engine/src/scene/components/NameComponent'
 import { TransformComponent } from '@etherealengine/engine/src/transform/components/TransformComponent'
@@ -37,7 +34,7 @@ const UpdateSystem = defineSystem({
   insert: { before: TransformSystem },
   execute: () => {
     const entity = getState(SceneState).entity
-    const elapsedSeconds = getState(EngineState).elapsedSeconds
+    const elapsedSeconds = getState(ECSState).elapsedSeconds
 
     const transformComponent = getComponent(entity, TransformComponent)
 
