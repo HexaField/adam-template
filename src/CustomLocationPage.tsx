@@ -17,10 +17,10 @@ import { ECSState } from '@etherealengine/ecs/src/ECSState'
 import { Engine } from '@etherealengine/ecs/src/Engine'
 import { CameraComponent } from '@etherealengine/engine/src/camera/components/CameraComponent'
 import { V_010 } from '@etherealengine/engine/src/common/constants/MathConstants'
-import { addObjectToGroup } from '@etherealengine/engine/src/scene/components/GroupComponent'
-import { NameComponent } from '@etherealengine/engine/src/scene/components/NameComponent'
 import { TransformComponent } from '@etherealengine/engine/src/transform/components/TransformComponent'
 import { TransformSystem } from '@etherealengine/engine/src/transform/systems/TransformSystem'
+import { addObjectToGroup } from '@etherealengine/engine/src/renderer/components/GroupComponent'
+import { NameComponent } from '@etherealengine/engine/src/common/NameComponent'
 
 const SceneState = defineState({
   name: 'ee.minimalist.SceneState',
