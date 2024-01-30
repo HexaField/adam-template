@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 
 import Debug from '@etherealengine/client-core/src/components/Debug'
-import '@etherealengine/engine/src/renderer/WebGLRendererSystem'
+import '@etherealengine/spatial/src/renderer/WebGLRendererSystem'
 import { defineState, getMutableState, getState } from '@etherealengine/hyperflux'
 
 import '@etherealengine/client/src/themes/base.css'
@@ -15,12 +15,12 @@ import { BoxGeometry, Mesh, MeshBasicMaterial } from 'three'
 import { Entity, createEntity, defineSystem, getComponent, setComponent } from '@etherealengine/ecs'
 import { ECSState } from '@etherealengine/ecs/src/ECSState'
 import { Engine } from '@etherealengine/ecs/src/Engine'
-import { CameraComponent } from '@etherealengine/engine/src/camera/components/CameraComponent'
-import { V_010 } from '@etherealengine/engine/src/common/constants/MathConstants'
-import { TransformComponent } from '@etherealengine/engine/src/transform/components/TransformComponent'
-import { TransformSystem } from '@etherealengine/engine/src/transform/systems/TransformSystem'
-import { addObjectToGroup } from '@etherealengine/engine/src/renderer/components/GroupComponent'
-import { NameComponent } from '@etherealengine/engine/src/common/NameComponent'
+import { CameraComponent } from '@etherealengine/spatial/src/camera/components/CameraComponent'
+import { V_010 } from '@etherealengine/spatial/src/common/constants/MathConstants'
+import { TransformComponent } from '@etherealengine/spatial/src/transform/components/TransformComponent'
+import { TransformSystem } from '@etherealengine/spatial/src/transform/systems/TransformSystem'
+import { addObjectToGroup } from '@etherealengine/spatial/src/renderer/components/GroupComponent'
+import { NameComponent } from '@etherealengine/spatial/src/common/NameComponent'
 
 const SceneState = defineState({
   name: 'ee.minimalist.SceneState',
