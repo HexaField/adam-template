@@ -26,12 +26,13 @@ Ethereal Engine. All Rights Reserved.
 import React, { Suspense } from 'react'
 
 /** @todo due to circular dependences, engine must be imported prior to other imports */
-import '@etherealengine/engine/src/ecs/classes/Engine'
 import { LoadingCircle } from '@etherealengine/client-core/src/components/LoadingCircle'
-import { EngineState } from '@etherealengine/spatial/src/EngineState'
 import { initializeBrowser } from '@etherealengine/engine/src/initializeBrowser'
-import { createEngine } from '@etherealengine/spatial/src/initializeEngine'
 import { getMutableState } from '@etherealengine/hyperflux'
+import { EngineState } from '@etherealengine/spatial/src/EngineState'
+import { createEngine } from '@etherealengine/spatial/src/initializeEngine'
+
+import { ThemeProvider } from '@etherealengine/client-core/src/common/services/ThemeService'
 
 createEngine()
 getMutableState(EngineState).publicPath.set(
@@ -41,5 +42,9 @@ getMutableState(EngineState).publicPath.set(
 initializeBrowser()
 
 export default function ({ children }) {
-  return <Suspense fallback={<LoadingCircle message={'Loading...'} />}>{children}</Suspense>
+  return (
+    <ThemeProvider>
+      <Suspense fallback={<LoadingCircle message={'Loading...'} />}>{children}</Suspense>
+    </ThemeProvider>
+  )
 }

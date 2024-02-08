@@ -31,6 +31,10 @@ import { createRoot } from 'react-dom/client'
 
 import ErrorBoundary from '@etherealengine/client-core/src/common/components/ErrorBoundary'
 
+import '@etherealengine/client/src/themes/base.css'
+import '@etherealengine/client/src/themes/components.css'
+import '@etherealengine/client/src/themes/utilities.css'
+
 const Engine = lazy(() => import('./engine'))
 const CustomLocationPage = lazy(() => import('./CustomLocationPage'))
 
