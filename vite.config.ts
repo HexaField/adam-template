@@ -66,7 +66,7 @@ export default defineConfig(async () => {
     base,
     optimizeDeps: {
       entries: ['./src/main.tsx'],
-      exclude: ['@etherealengine/volumetric'],
+      exclude: [],
       esbuildOptions: {
         target: 'es2020'
       }
