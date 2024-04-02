@@ -34,7 +34,7 @@ import { createEngine } from '@etherealengine/spatial/src/initializeEngine'
 
 import { ThemeProvider } from '@etherealengine/client-core/src/common/services/ThemeService'
 
-createEngine()
+createEngine(document.getElementById('engine-renderer-canvas') as HTMLCanvasElement)
 getMutableState(EngineState).publicPath.set(
   // @ts-ignore
   import.meta.env.BASE_URL === '/client/' ? location.origin : import.meta.env.BASE_URL!.slice(0, -1) // remove trailing '/'
