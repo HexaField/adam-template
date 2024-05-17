@@ -11,7 +11,7 @@ import { ECSState } from '@etherealengine/ecs/src/ECSState'
 import { Engine } from '@etherealengine/ecs/src/Engine'
 import { CameraComponent } from '@etherealengine/spatial/src/camera/components/CameraComponent'
 import { NameComponent } from '@etherealengine/spatial/src/common/NameComponent'
-import { V_010 } from '@etherealengine/spatial/src/common/constants/MathConstants'
+import { Vector3_Up } from '@etherealengine/spatial/src/common/constants/MathConstants'
 import { addObjectToGroup } from '@etherealengine/spatial/src/renderer/components/GroupComponent'
 import { VisibleComponent } from '@etherealengine/spatial/src/renderer/components/VisibleComponent'
 import { TransformComponent } from '@etherealengine/spatial/src/transform/components/TransformComponent'
@@ -35,7 +35,7 @@ const UpdateSystem = defineSystem({
     const entity = getState(SceneState).entity
     const elapsedSeconds = getState(ECSState).elapsedSeconds
     const transformComponent = getComponent(entity, TransformComponent)
-    transformComponent.rotation.setFromAxisAngle(V_010, elapsedSeconds)
+    transformComponent.rotation.setFromAxisAngle(Vector3_Up, elapsedSeconds)
   },
   reactor: function () {
     const state = getMutableState(SceneState)
