@@ -32,8 +32,6 @@ import { getMutableState } from '@etherealengine/hyperflux'
 import { EngineState } from '@etherealengine/spatial/src/EngineState'
 import { createEngine } from '@etherealengine/spatial/src/initializeEngine'
 
-import { ThemeProvider } from '@etherealengine/client-core/src/common/services/ThemeService'
-
 createEngine(document.getElementById('engine-renderer-canvas') as HTMLCanvasElement)
 getMutableState(EngineState).publicPath.set(
   // @ts-ignore
@@ -43,8 +41,6 @@ initializeBrowser()
 
 export default function ({ children }) {
   return (
-    <ThemeProvider>
-      <Suspense fallback={<LoadingCircle message={'Loading...'} />}>{children}</Suspense>
-    </ThemeProvider>
+    <Suspense fallback={<LoadingCircle message={'Loading...'} />}>{children}</Suspense>
   )
 }
