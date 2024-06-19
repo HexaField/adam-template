@@ -14,6 +14,7 @@ import { NameComponent } from '@etherealengine/spatial/src/common/NameComponent'
 import { Vector3_Up } from '@etherealengine/spatial/src/common/constants/MathConstants'
 import { addObjectToGroup } from '@etherealengine/spatial/src/renderer/components/GroupComponent'
 import { VisibleComponent } from '@etherealengine/spatial/src/renderer/components/VisibleComponent'
+import { EntityTreeComponent } from '@etherealengine/spatial/src/transform/components/EntityTree'
 import { TransformComponent } from '@etherealengine/spatial/src/transform/components/TransformComponent'
 import { TransformSystem, computeTransformMatrix } from '@etherealengine/spatial/src/transform/systems/TransformSystem'
 
@@ -22,6 +23,7 @@ const SceneState = defineState({
   initial: () => {
     const entity = createEntity()
     setComponent(entity, TransformComponent)
+    setComponent(entity, EntityTreeComponent, { parentEntity: Engine.instance.originEntity })
     return {
       entity
     }
