@@ -27,20 +27,18 @@ import React, { Suspense } from 'react'
 
 /** @todo due to circular dependences, engine must be imported prior to other imports */
 import { LoadingCircle } from '@etherealengine/client-core/src/components/LoadingCircle'
-import { initializeBrowser } from '@etherealengine/engine/src/initializeBrowser'
-import { getMutableState } from '@etherealengine/hyperflux'
+import { getMutableState, getState } from '@etherealengine/hyperflux'
 import { EngineState } from '@etherealengine/spatial/src/EngineState'
 import { createEngine } from '@etherealengine/spatial/src/initializeEngine'
+import { ECSState } from '@etherealengine/ecs'
 
-createEngine(document.getElementById('engine-renderer-canvas') as HTMLCanvasElement)
+createEngine()
+getState(ECSState).timer.start()
 getMutableState(EngineState).publicPath.set(
   // @ts-ignore
   import.meta.env.BASE_URL === '/client/' ? location.origin : import.meta.env.BASE_URL!.slice(0, -1) // remove trailing '/'
 )
-initializeBrowser()
 
 export default function ({ children }) {
-  return (
-    <Suspense fallback={<LoadingCircle message={'Loading...'} />}>{children}</Suspense>
-  )
+  return <Suspense fallback={<LoadingCircle message={'Loading...'} />}>{children}</Suspense>
 }
