@@ -25,15 +25,14 @@ Ethereal Engine. All Rights Reserved.
 
 import React, { Suspense } from 'react'
 
-/** @todo due to circular dependences, engine must be imported prior to other imports */
 import { LoadingCircle } from '@etherealengine/client-core/src/components/LoadingCircle'
-import { getMutableState, getState } from '@etherealengine/hyperflux'
+import { createEngine } from '@etherealengine/ecs/src/Engine'
+import { getMutableState } from '@etherealengine/hyperflux'
 import { EngineState } from '@etherealengine/spatial/src/EngineState'
-import { createEngine } from '@etherealengine/spatial/src/initializeEngine'
-import { ECSState } from '@etherealengine/ecs'
+import { startTimer } from '@etherealengine/spatial/src/startTimer'
 
 createEngine()
-getState(ECSState).timer.start()
+startTimer()
 getMutableState(EngineState).publicPath.set(
   // @ts-ignore
   import.meta.env.BASE_URL === '/client/' ? location.origin : import.meta.env.BASE_URL!.slice(0, -1) // remove trailing '/'
