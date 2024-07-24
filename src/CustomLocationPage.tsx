@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 
 import Debug from '@etherealengine/client-core/src/components/Debug'
-import { defineState, getMutableState, getState, useMutableState } from '@etherealengine/hyperflux'
+import { defineState, getMutableState, getState, useMutableState, useReactiveRef } from '@etherealengine/hyperflux'
 import '@etherealengine/spatial/src/renderer/WebGLRendererSystem'
 
 import { BoxGeometry, Mesh, MeshBasicMaterial } from 'three'
@@ -71,13 +71,13 @@ const UpdateSystem = defineSystem({
 })
 
 export default function Template() {
-  const ref = React.useRef<HTMLDivElement>(null)
+  const [ref, setRef] = useReactiveRef()
 
   useEngineCanvas(ref)
 
   return (
     <>
-      <div ref={ref} style={{ width: '100%', height: '100%' }} />
+      <div ref={setRef} style={{ width: '100%', height: '100%' }} />
       <Debug />
     </>
   )
