@@ -1,12 +1,9 @@
 {
-  "name": "@etherealengine/ee-static-build-template",
+  "name": "@ir-engine/ir-static-build-template",
   "version": "0.0.0",
   "description": "",
   "type": "module",
   "main": "",
-  "etherealEngine": {
-    "version": "1.3.0"
-  },
   "scripts": {
     "test": "exit 0",
     "check-errors": "tsc --noemit",

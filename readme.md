@@ -1,9 +1,9 @@
-# ee-static-build-template
+# ir-static-build-template
 
 Build the Ethereal Engine client by itself from scratch.
 
 ## Live Example
-https://etherealengine.github.io/ee-static-build-template/
+https://etherealengine.github.io/ir-static-build-template/
 
 ## Getting started
 
