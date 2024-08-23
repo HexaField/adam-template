@@ -1,24 +1,30 @@
-import React, { useEffect } from 'react'
-
-import Debug from '@ir-engine/client-core/src/components/Debug'
-import { defineState, getMutableState, getState, useMutableState, useReactiveRef } from '@ir-engine/hyperflux'
-import '@ir-engine/spatial/src/renderer/WebGLRendererSystem'
-
-import { BoxGeometry, Mesh, MeshBasicMaterial } from 'three'
+import '@ir-engine/client/src/engine'
 
 import { useEngineCanvas } from '@ir-engine/client-core/src/hooks/useEngineCanvas'
 import { UndefinedEntity, createEntity, defineSystem, getComponent, setComponent } from '@ir-engine/ecs'
 import { ECSState } from '@ir-engine/ecs/src/ECSState'
 import { Engine } from '@ir-engine/ecs/src/Engine'
+import {
+  defineState,
+  getMutableState,
+  getState,
+  useImmediateEffect,
+  useMutableState,
+  useReactiveRef
+} from '@ir-engine/hyperflux'
 import { EngineState } from '@ir-engine/spatial/src/EngineState'
 import { CameraComponent } from '@ir-engine/spatial/src/camera/components/CameraComponent'
 import { NameComponent } from '@ir-engine/spatial/src/common/NameComponent'
 import { Vector3_Up } from '@ir-engine/spatial/src/common/constants/MathConstants'
+import { destroySpatialEngine, initializeSpatialEngine } from '@ir-engine/spatial/src/initializeEngine'
 import { addObjectToGroup } from '@ir-engine/spatial/src/renderer/components/GroupComponent'
 import { VisibleComponent } from '@ir-engine/spatial/src/renderer/components/VisibleComponent'
 import { EntityTreeComponent } from '@ir-engine/spatial/src/transform/components/EntityTree'
 import { TransformComponent } from '@ir-engine/spatial/src/transform/components/TransformComponent'
 import { TransformSystem, computeTransformMatrix } from '@ir-engine/spatial/src/transform/systems/TransformSystem'
+
+import React, { useEffect } from 'react'
+import { BoxGeometry, Mesh, MeshBasicMaterial } from 'three'
 
 const SceneState = defineState({
   name: 'ee.minimalist.SceneState',
@@ -73,12 +79,18 @@ const UpdateSystem = defineSystem({
 export default function Template() {
   const [ref, setRef] = useReactiveRef()
 
+  useImmediateEffect(() => {
+    initializeSpatialEngine()
+    return () => {
+      destroySpatialEngine()
+    }
+  }, [])
+
   useEngineCanvas(ref)
 
   return (
     <>
       <div ref={setRef} style={{ width: '100%', height: '100%' }} />
-      <Debug />
     </>
   )
 }

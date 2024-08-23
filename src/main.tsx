@@ -23,29 +23,27 @@ All portions of the code written by the Infinite Reality Engine team are Copyrig
 Infinite Reality Engine. All Rights Reserved.
 */
 
+// tslint:disable:ordered-imports
 /** @ts-ignore */
-;(globalThis as any).process = { env: { ...(import.meta as any).env, APP_ENV: (import.meta as any).env.MODE } }
+globalThis.process = { env: { ...(import.meta as any).env, APP_ENV: (import.meta as any).env.MODE } }
 
 import React, { lazy } from 'react'
 import { createRoot } from 'react-dom/client'
-
-import ErrorBoundary from '@ir-engine/client-core/src/common/components/ErrorBoundary'
 
 import '@ir-engine/client/src/themes/base.css'
 import '@ir-engine/client/src/themes/components.css'
 import '@ir-engine/client/src/themes/utilities.css'
 
-const Engine = lazy(() => import('./engine'))
+import { createHyperStore } from '@ir-engine/hyperflux'
+
+// @ts-ignore
+const publicPath = import.meta.env.BASE_URL === '/client/' ? location.origin : import.meta.env.BASE_URL!.slice(0, -1) // remove trailing '/'
+createHyperStore({ publicPath })
+
 const CustomLocationPage = lazy(() => import('./CustomLocationPage'))
 
 const App = () => {
-  return (
-    <ErrorBoundary>
-      <Engine>
-        <CustomLocationPage />
-      </Engine>
-    </ErrorBoundary>
-  )
+  return <CustomLocationPage />
 }
 
 const container = document.getElementById('root')

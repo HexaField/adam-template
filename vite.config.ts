@@ -28,19 +28,26 @@ import dotenv from 'dotenv'
 import fs from 'fs'
 import path from 'path'
 import { defineConfig, UserConfig } from 'vite'
+import manifestJson from './manifest.json'
 
 export default defineConfig(async () => {
   dotenv.config({
     path: packageRoot.path + '/.env.local'
   })
 
-  const isDevOrLocal = process.env.APP_ENV === 'development' || process.env.VITE_LOCAL_BUILD === 'true'
+  const isDev = process.env.APP_ENV === 'development'
 
   const base = `https://${process.env['STATIC_BUILD_HOST'] ?? 'localhost:3000'}/`
 
+  const define = { __IR_ENGINE_VERSION__: JSON.stringify(manifestJson.engineVersion) }
+  for (const [key, value] of Object.entries(process.env)) {
+    define[`globalThis.process.env.${key}`] = JSON.stringify(value)
+  }
+
   const returned = {
+    define: define,
     server: {
-      cors: isDevOrLocal ? false : true,
+      cors: isDev ? false : true,
       hmr:
         process.env.VITE_HMR === 'true'
           ? {
@@ -54,7 +61,7 @@ export default defineConfig(async () => {
       headers: {
         'Origin-Agent-Cluster': '?1'
       },
-      ...(isDevOrLocal
+      ...(isDev
         ? {
             https: {
               key: fs.readFileSync(path.join(packageRoot.path, 'certs/key.pem')),
