@@ -30,7 +30,7 @@ import path from 'path'
 import { defineConfig, UserConfig } from 'vite'
 import manifestJson from './manifest.json'
 
-export default defineConfig(async () => {
+export default defineConfig(async ({ command }) => {
   dotenv.config({
     path: packageRoot.path + '/.env.local'
   })
@@ -81,7 +81,7 @@ export default defineConfig(async () => {
     plugins: [],
     build: {
       target: 'esnext',
-      sourcemap: 'inline',
+      sourcemap: process.env.VITE_SOURCEMAPS === 'true' ? true : false,
       minify: 'esbuild',
       dynamicImportVarsOptions: {
         warnOnError: true
