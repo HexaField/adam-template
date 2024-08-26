@@ -34,7 +34,9 @@
     "./tests/**/*.ts"
   ],
   "include": [
-    "../../../server-core/src/*",
+    "../../../../../__global.d.ts",
+    "../../../../server-core/src/*",
+    "../../../../client-core/src/*",
     "./**/*.ts",
     "./**/*.tsx"
   ]
