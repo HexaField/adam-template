@@ -36,9 +36,7 @@ import '@ir-engine/client/src/themes/utilities.css'
 
 import { createHyperStore } from '@ir-engine/hyperflux'
 
-// @ts-ignore
-const publicPath = import.meta.env.BASE_URL === '/client/' ? location.origin : import.meta.env.BASE_URL!.slice(0, -1) // remove trailing '/'
-createHyperStore({ publicPath })
+createHyperStore()
 
 const CustomLocationPage = lazy(() => import('./CustomLocationPage'))
 
