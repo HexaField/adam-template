@@ -35,7 +35,7 @@ import path from 'path'
 
 const cwd = process.cwd()
 
-dotenv.config({ path: cwd + '/../../../../.env.local' })
+dotenv.config({ path: packageRoot.path + '/.env.local' })
 
 const app = new koa()
 const PORT = parseInt(process.env.VITE_APP_PORT) || 3000
