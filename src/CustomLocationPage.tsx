@@ -1,7 +1,14 @@
 import '@ir-engine/client/src/engine'
 
 import { useEngineCanvas } from '@ir-engine/client-core/src/hooks/useEngineCanvas'
-import { UndefinedEntity, createEntity, defineSystem, getComponent, setComponent } from '@ir-engine/ecs'
+import {
+  EntityTreeComponent,
+  UndefinedEntity,
+  createEntity,
+  defineSystem,
+  getComponent,
+  setComponent
+} from '@ir-engine/ecs'
 import { ECSState } from '@ir-engine/ecs/src/ECSState'
 import { Engine } from '@ir-engine/ecs/src/Engine'
 import {
@@ -12,17 +19,16 @@ import {
   useMutableState,
   useReactiveRef
 } from '@ir-engine/hyperflux'
-import { EngineState } from '@ir-engine/spatial/src/EngineState'
 import { CameraComponent } from '@ir-engine/spatial/src/camera/components/CameraComponent'
 import { NameComponent } from '@ir-engine/spatial/src/common/NameComponent'
 import { Vector3_Up } from '@ir-engine/spatial/src/common/constants/MathConstants'
 import { destroySpatialEngine, initializeSpatialEngine } from '@ir-engine/spatial/src/initializeEngine'
 import { addObjectToGroup } from '@ir-engine/spatial/src/renderer/components/GroupComponent'
 import { VisibleComponent } from '@ir-engine/spatial/src/renderer/components/VisibleComponent'
-import { EntityTreeComponent } from '@ir-engine/spatial/src/transform/components/EntityTree'
 import { TransformComponent } from '@ir-engine/spatial/src/transform/components/TransformComponent'
 import { TransformSystem, computeTransformMatrix } from '@ir-engine/spatial/src/transform/systems/TransformSystem'
 
+import { ReferenceSpaceState } from '@ir-engine/spatial'
 import React, { useEffect } from 'react'
 import { BoxGeometry, Mesh, MeshBasicMaterial } from 'three'
 
@@ -45,7 +51,7 @@ const UpdateSystem = defineSystem({
     transformComponent.rotation.setFromAxisAngle(Vector3_Up, elapsedSeconds)
   },
   reactor: function () {
-    const viewerEntity = useMutableState(EngineState).viewerEntity.value
+    const viewerEntity = useMutableState(ReferenceSpaceState).viewerEntity.value
 
     useEffect(() => {
       if (!viewerEntity) return
