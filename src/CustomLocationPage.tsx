@@ -1,6 +1,5 @@
 import '@ir-engine/client/src/engine'
 
-import { useEngineCanvas } from '@ir-engine/client-core/src/hooks/useEngineCanvas'
 import { UndefinedEntity, createEntity, defineSystem, getComponent, setComponent } from '@ir-engine/ecs'
 import { ECSState } from '@ir-engine/ecs/src/ECSState'
 import { Engine } from '@ir-engine/ecs/src/Engine'
@@ -19,6 +18,7 @@ import { Vector3_Up } from '@ir-engine/spatial/src/common/constants/MathConstant
 import { destroySpatialEngine, initializeSpatialEngine } from '@ir-engine/spatial/src/initializeEngine'
 import { addObjectToGroup } from '@ir-engine/spatial/src/renderer/components/GroupComponent'
 import { VisibleComponent } from '@ir-engine/spatial/src/renderer/components/VisibleComponent'
+import { useEngineCanvas } from '@ir-engine/spatial/src/renderer/functions/useEngineCanvas'
 import { EntityTreeComponent } from '@ir-engine/spatial/src/transform/components/EntityTree'
 import { TransformComponent } from '@ir-engine/spatial/src/transform/components/TransformComponent'
 import { TransformSystem, computeTransformMatrix } from '@ir-engine/spatial/src/transform/systems/TransformSystem'
