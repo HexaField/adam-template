@@ -23,7 +23,7 @@ import { CameraComponent } from '@ir-engine/spatial/src/camera/components/Camera
 import { NameComponent } from '@ir-engine/spatial/src/common/NameComponent'
 import { Vector3_Up } from '@ir-engine/spatial/src/common/constants/MathConstants'
 import { destroySpatialEngine, initializeSpatialEngine } from '@ir-engine/spatial/src/initializeEngine'
-import { addObjectToGroup } from '@ir-engine/spatial/src/renderer/components/ObjectComponent'
+import { MeshComponent } from '@ir-engine/spatial/src/renderer/components/MeshComponent'
 import { VisibleComponent } from '@ir-engine/spatial/src/renderer/components/VisibleComponent'
 import { useEngineCanvas } from '@ir-engine/spatial/src/renderer/functions/useEngineCanvas'
 import { TransformComponent } from '@ir-engine/spatial/src/transform/components/TransformComponent'
@@ -63,7 +63,7 @@ const UpdateSystem = defineSystem({
 
       // Create a box at the origin
       const mesh = new Mesh(new BoxGeometry(1, 1, 1), new MeshBasicMaterial({ color: 0x00ff00 }))
-      addObjectToGroup(entity, mesh)
+      setComponent(entity, MeshComponent, mesh)
       setComponent(entity, NameComponent, 'Box')
       setComponent(entity, VisibleComponent)
 
