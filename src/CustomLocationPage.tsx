@@ -1,6 +1,13 @@
 import '@ir-engine/client/src/engine'
 
-import { UndefinedEntity, createEntity, defineSystem, getComponent, setComponent } from '@ir-engine/ecs'
+import {
+  EntityTreeComponent,
+  UndefinedEntity,
+  createEntity,
+  defineSystem,
+  getComponent,
+  setComponent
+} from '@ir-engine/ecs'
 import { ECSState } from '@ir-engine/ecs/src/ECSState'
 import { Engine } from '@ir-engine/ecs/src/Engine'
 import {
@@ -11,7 +18,7 @@ import {
   useMutableState,
   useReactiveRef
 } from '@ir-engine/hyperflux'
-import { EngineState } from '@ir-engine/spatial/src/EngineState'
+import { ReferenceSpaceState } from '@ir-engine/spatial'
 import { CameraComponent } from '@ir-engine/spatial/src/camera/components/CameraComponent'
 import { NameComponent } from '@ir-engine/spatial/src/common/NameComponent'
 import { Vector3_Up } from '@ir-engine/spatial/src/common/constants/MathConstants'
@@ -19,7 +26,6 @@ import { destroySpatialEngine, initializeSpatialEngine } from '@ir-engine/spatia
 import { MeshComponent } from '@ir-engine/spatial/src/renderer/components/MeshComponent'
 import { VisibleComponent } from '@ir-engine/spatial/src/renderer/components/VisibleComponent'
 import { useEngineCanvas } from '@ir-engine/spatial/src/renderer/functions/useEngineCanvas'
-import { EntityTreeComponent } from '@ir-engine/spatial/src/transform/components/EntityTree'
 import { TransformComponent } from '@ir-engine/spatial/src/transform/components/TransformComponent'
 import { TransformSystem, computeTransformMatrix } from '@ir-engine/spatial/src/transform/systems/TransformSystem'
 
@@ -45,7 +51,7 @@ const UpdateSystem = defineSystem({
     transformComponent.rotation.setFromAxisAngle(Vector3_Up, elapsedSeconds)
   },
   reactor: function () {
-    const viewerEntity = useMutableState(EngineState).viewerEntity.value
+    const viewerEntity = useMutableState(ReferenceSpaceState).viewerEntity.value
 
     useEffect(() => {
       if (!viewerEntity) return
