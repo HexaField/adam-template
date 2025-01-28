@@ -1,6 +1,6 @@
 # ir-static-build-template
 
-Build the Ethereal Engine client by itself from scratch.
+Build the iR Engine client by itself from scratch.
 
 ## Live Example
 https://ir-engine.github.io/ir-static-build-template/
