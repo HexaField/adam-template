@@ -1,5 +1,5 @@
 {
-  "name": "@hexafield/ir-adam-template",
+  "name": "@hexafield/adam-template",
   "version": "0.0.0",
   "description": "",
   "main": "",
@@ -17,7 +17,10 @@
     "localstart": "cross-env APP_ENV=production VITE_LOCAL_BUILD=true npm run start"
   },
   "peerDependencies": {},
-  "dependencies": {},
+  "dependencies": {
+    "@coasys/ad4m": "0.10.1-rc8",
+    "@coasys/ad4m-connect": "0.10.1-rc8"
+  },
   "devDependencies": {},
   "license": "ISC",
   "pre-commit": [
