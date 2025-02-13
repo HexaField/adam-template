@@ -48,7 +48,7 @@ const createSceneGLTF = (): GLTF.IGLTF => ({
   extensionsUsed: ['EE_uuid', 'EE_visible', 'EE_rigidbody', 'EE_collider', 'EE_primitive_geometry']
 })
 
-export const useBasicScene = (sceneID: string) => {
+export const  useBasicScene = (sceneID: string) => {
   const gltfEntityState = useHookstate(UndefinedEntity)
   const { viewerEntity, originEntity } = useMutableState(ReferenceSpaceState).value
 

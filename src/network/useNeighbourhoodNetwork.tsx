@@ -27,26 +27,38 @@ import {
   useWebRTCPeerConnection
 } from '@ir-engine/network'
 import React, { useEffect } from 'react'
+import { useBasicScene } from '../world/BasicScene'
 
-export const NeighbourhoodnetworkState = defineState({
-  name: 'hexafield.adam-template.NeighbourhoodnetworkState',
+export const NeighbourhoodNetworkState = defineState({
+  name: 'hexafield.adam-template.NeighbourhoodNetworkState',
   initial: [] as string[],
   reactor: () => {
-    const joinedNeighbourhoods = useMutableState(NeighbourhoodnetworkState).value
+    const joinedNeighbourhoods = useMutableState(NeighbourhoodNetworkState).value
 
     useEffect(() => {
       /** @todo it's probably fine that we override this every time we connect to a new server, but we should maybe handle this smarter */
       getMutableState(StunServerState).set(PUBLIC_STUN_SERVERS)
     }, [])
+
     return (
       <>
         {joinedNeighbourhoods.map((neighbourhood) => (
-          <ConnectionReactor key={neighbourhood} networkID={neighbourhood as NetworkID} />
+          <NeighbourhoodReactor key={neighbourhood} neighbourhood={neighbourhood} />
         ))}
       </>
     )
   }
 })
+
+const NeighbourhoodReactor = (props: { neighbourhood: string }) => {
+  useBasicScene(props.neighbourhood)
+
+  return (
+    <>
+      {/* <ConnectionReactor networkID={props.neighbourhood as NetworkID} /> */}
+    </>
+  )
+}
 
 const ConnectionReactor = (props: { networkID: NetworkID }) => {
   const { networkID } = props
