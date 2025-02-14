@@ -24,6 +24,12 @@ export default function Template() {
       globalThis.process.env.APP_ENV === 'development'
         ? 'https://' + globalThis.process.env.VITE_APP_HOST + ':' + globalThis.process.env.VITE_APP_PORT
         : globalThis.process.env.BASE_URL!
+    console.log(
+      globalThis.process.env.APP_ENV,
+      globalThis.process.env.VITE_APP_HOST,
+      globalThis.process.env.VITE_APP_PORT,
+      globalThis.process.env.BASE_URL
+    )
     getMutableState(DomainConfigState).publicDomain.set(domain)
     getMutableState(DomainConfigState).cloudDomain.set(domain)
   }, [])
