@@ -13,26 +13,19 @@ import { AgentState } from './ad4m/useADAM'
 import { NeighbourhoodNetworkState } from './ad4m/useNeighbourhoodNetwork'
 import { PerspectivesState } from './ad4m/usePerspectives'
 
+const domain =
+  globalThis.process.env['APP_ENV'] === 'development'
+    ? 'https://' + globalThis.process.env['VITE_APP_HOST'] + ':' + globalThis.process.env['VITE_APP_PORT']
+    : globalThis.process.env['BASE_URL']!
+
+getMutableState(DomainConfigState).publicDomain.set(domain)
+getMutableState(DomainConfigState).cloudDomain.set(domain)
+
 export default function Template() {
   const [ref, setRef] = useReactiveRef()
 
   useSpatialEngine()
   useEngineCanvas(ref)
-
-  useEffect(() => {
-    const domain =
-      globalThis.process.env.APP_ENV === 'development'
-        ? 'https://' + globalThis.process.env.VITE_APP_HOST + ':' + globalThis.process.env.VITE_APP_PORT
-        : globalThis.process.env.BASE_URL!
-    console.log(
-      globalThis.process.env.APP_ENV,
-      globalThis.process.env.VITE_APP_HOST,
-      globalThis.process.env.VITE_APP_PORT,
-      globalThis.process.env.BASE_URL
-    )
-    getMutableState(DomainConfigState).publicDomain.set(domain)
-    getMutableState(DomainConfigState).cloudDomain.set(domain)
-  }, [])
 
   const agent = useMutableState(AgentState).value
 
