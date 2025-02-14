@@ -1,12 +1,13 @@
 import '@ir-engine/client/src/engine'
 
-import { getMutableState, useMutableState, useReactiveRef } from '@ir-engine/hyperflux'
+import Debug from '@ir-engine/client-core/src/components/Debug'
+import { getMutableState, useMutableState, useReactiveRef, UserID } from '@ir-engine/hyperflux'
 import { useSpatialEngine } from '@ir-engine/spatial/src/initializeEngine'
 import { useEngineCanvas } from '@ir-engine/spatial/src/renderer/functions/useEngineCanvas'
-import Debug from '@ir-engine/client-core/src/components/Debug'
 
-import React from 'react'
-import { useAgent } from './ad4m/useADAM'
+import { EngineState } from '@ir-engine/ecs'
+import React, { useEffect } from 'react'
+import { AgentState } from './ad4m/useADAM'
 import { PerspectivesState } from './ad4m/usePerspectives'
 import { NeighbourhoodNetworkState } from './network/useNeighbourhoodNetwork'
 
@@ -16,7 +17,12 @@ export default function Template() {
   useSpatialEngine()
   useEngineCanvas(ref)
 
-  const agent = useAgent()
+  const agent = useMutableState(AgentState).value
+
+  useEffect(() => {
+    if (!agent) return
+    getMutableState(EngineState).userID.set(agent.did as UserID)
+  }, [agent?.did])
 
   return (
     <>

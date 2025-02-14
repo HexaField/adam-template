@@ -58,18 +58,18 @@ export const AdamClientState = defineState({
   }
 })
 
-export const useAgent = () => {
-  const adam = useMutableState(AdamClientState).value
+export const AgentState = defineState({
+  name: 'hexafield.adam-template.AgentState',
+  initial: null as Agent | null,
+  reactor: () => {
+    const adam = useMutableState(AdamClientState).value
 
-  const selfAgent = useHookstate(null as null | Agent)
+    useEffect(() => {
+      if (!adam) return
 
-  useEffect(() => {
-    if (!adam) return
-
-    adam.agent.me().then((response) => {
-      selfAgent.set(response)
-    })
-  }, [adam])
-
-  return selfAgent.value
-}
+      adam.agent.me().then((response) => {
+        getMutableState(AgentState).set(response)
+      })
+    }, [adam])
+  }
+})

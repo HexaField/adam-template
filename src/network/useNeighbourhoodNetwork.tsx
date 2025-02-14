@@ -1,9 +1,10 @@
-import { API, useFind } from '@ir-engine/common'
+import { Literal, NeighbourhoodProxy, PerspectiveExpression } from '@coasys/ad4m'
 import { PUBLIC_STUN_SERVERS } from '@ir-engine/common/src/constants/STUNServers'
 import { Engine } from '@ir-engine/ecs'
 import {
   NetworkID,
   PeerID,
+  State,
   UserID,
   defineState,
   dispatchAction,
@@ -18,6 +19,7 @@ import {
   NetworkActions,
   NetworkState,
   NetworkTopics,
+  RTCPeerConnectionState,
   SendMessageType,
   StunServerState,
   WebRTCTransportFunctions,
@@ -27,7 +29,30 @@ import {
   useWebRTCPeerConnection
 } from '@ir-engine/network'
 import React, { useEffect } from 'react'
+import { AgentState } from '../ad4m/useADAM'
+import { PerspectivesState } from '../ad4m/usePerspectives'
 import { useBasicScene } from '../world/BasicScene'
+
+const IS_ANYONE_HERE = 'is-anyone-here'
+const I_AM_HERE = 'i-am-here'
+const PEER_SIGNAL = 'peer-signal'
+const LEAVE = 'leave'
+const HEARTBEAT = 'heartbeat'
+
+type SignalData = {
+  networkID: NetworkID
+  targetPeerID: PeerID
+  fromPeerID: PeerID
+  message: MessageTypes
+}
+
+const PeerDIDState = defineState({
+  name: 'hexafield.adam-template.PeerDIDState',
+  initial: {
+    peersToDID: {} as Record<PeerID, string>,
+    DIDToPeers: {} as Record<string, PeerID[]>
+  }
+})
 
 export const NeighbourhoodNetworkState = defineState({
   name: 'hexafield.adam-template.NeighbourhoodNetworkState',
@@ -53,37 +78,43 @@ export const NeighbourhoodNetworkState = defineState({
 const NeighbourhoodReactor = (props: { neighbourhood: string }) => {
   useBasicScene(props.neighbourhood)
 
-  return (
-    <>
-      {/* <ConnectionReactor networkID={props.neighbourhood as NetworkID} /> */}
-    </>
-  )
+  return <ConnectionReactor networkID={props.neighbourhood as NetworkID} />
 }
+
+const array = new Uint32Array(1)
+self.crypto.getRandomValues(array)
+const myPeerIndex = array[0]
 
 const ConnectionReactor = (props: { networkID: NetworkID }) => {
   const { networkID } = props
-  const joinResponse = useHookstate<null | { index: number }>(null)
+
+  const perspective = getState(PerspectivesState).neighbourhoods[networkID]
+
+  const neighbourhood = useHookstate(() => {
+    return perspective.getNeighbourhoodProxy()
+  }).value as NeighbourhoodProxy
+
+  const source = perspective.sharedUrl!
+
+  const sendMessage: SendMessageType = (networkID: NetworkID, toPeerID: PeerID, message: MessageTypes) => {
+    console.log('sendMessage', networkID, toPeerID, message)
+    const toAgentDID = getState(PeerDIDState).peersToDID[toPeerID]
+    neighbourhood.sendSignalU(toAgentDID, {
+      links: [
+        {
+          source,
+          predicate: PEER_SIGNAL,
+          target: Literal.from({
+            networkID,
+            targetPeerID: toPeerID,
+            message
+          }).toUrl()
+        }
+      ]
+    })
+  }
 
   useEffect(() => {
-    const abortController = new AbortController()
-
-    API.instance
-      .service(p2pSignalingPath)
-      .create({ networkID })
-      .then((response) => {
-        if (abortController.signal.aborted) return
-
-        joinResponse.set(response)
-      })
-
-    return () => {
-      abortController.abort()
-    }
-  }, [])
-
-  useEffect(() => {
-    if (!joinResponse.value) return
-
     const topic = NetworkTopics.world
 
     getMutableState(NetworkState).hostIds[topic].set(networkID)
@@ -99,12 +130,115 @@ const ConnectionReactor = (props: { networkID: NetworkID }) => {
         $topic: network.topic,
         $to: Engine.instance.store.peerID,
         peerID: Engine.instance.store.peerID,
-        peerIndex: joinResponse.value.index,
+        peerIndex: myPeerIndex,
         userID: Engine.instance.userID
       })
     )
 
+    const agent = getState(AgentState)!
+
+    neighbourhood.sendBroadcastU({
+      links: [
+        {
+          source,
+          predicate: IS_ANYONE_HERE,
+          target: Literal.from({
+            networkID,
+            peerID: Engine.instance.store.peerID,
+            peerIndex: myPeerIndex
+          }).toUrl()
+        }
+      ]
+    })
+
+    const addConnection = (userID: UserID, peerID: PeerID, peerIndex: number) => {
+      otherPeers.merge([{ peerID, peerIndex, userID }])
+      getMutableState(PeerDIDState).peersToDID[peerID].set(userID)
+      if (!getState(PeerDIDState).DIDToPeers[userID]) getMutableState(PeerDIDState).DIDToPeers[userID].set([peerID])
+      else getMutableState(PeerDIDState).DIDToPeers[userID].merge([peerID])
+    }
+
+    const broadcastArrivalResponse = (toAgentID: string) => {
+      neighbourhood.sendSignalU(toAgentID, {
+        links: [
+          {
+            source: source,
+            predicate: I_AM_HERE,
+            target: Literal.from({
+              networkID,
+              peerID: Engine.instance.store.peerID,
+              peerIndex: myPeerIndex
+            }).toUrl()
+          }
+        ]
+      })
+    }
+
+    const onBroadcastReceived = (expression: PerspectiveExpression) => {
+      console.log('onBroadcastReceived', expression)
+      const link = expression.data.links[0]
+
+      if (link.data.predicate === IS_ANYONE_HERE && link.data.source === source) {
+        // Check if the remote host should create the offer
+        // -> If so, create passive connection
+        if (link.author.localeCompare(agent.did) < 1) {
+          const data = getExpressionData(link.data.target) as {
+            peerID: PeerID
+            peerIndex: number
+            networkID: NetworkID
+          }
+          addConnection(link.author, data.peerID, data.peerIndex)
+        }
+        broadcastArrivalResponse(link.author)
+      }
+
+      if (link.data.predicate === I_AM_HERE && link.data.source === source && link.data.target === agent.did) {
+        const data = getExpressionData(link.data.source) as { peerID: PeerID; peerIndex: number; networkID: NetworkID }
+        // Check if we should create the offer
+        // -> If so, create active connection
+        if (link.author.localeCompare(agent.did) > 0) {
+          addConnection(link.author, data.peerID, data.peerIndex)
+        } else {
+          addConnection(link.author, data.peerID, data.peerIndex)
+          broadcastArrivalResponse(link.author)
+        }
+      }
+
+      if (link.data.predicate === PEER_SIGNAL && link.data.source === source) {
+        const data = getExpressionData(link.data.target) as SignalData
+
+        const fromAgentpeers = getState(PeerDIDState).DIDToPeers[link.author]
+        if (!fromAgentpeers.includes(data.fromPeerID))
+          console.warn('Received message from an agent about a peer who does not control it!')
+
+        // need to ignore messages from self
+        if (data.targetPeerID !== Engine.instance.store.peerID) return
+        if (data.networkID !== network.id) return
+
+        WebRTCTransportFunctions.onMessage(sendMessage, data.networkID, data.fromPeerID, data.message)
+      }
+
+      if (link.data.predicate === LEAVE && link.data.source === source) {
+        const data = getExpressionData(link.data.target) as { peerID: PeerID }
+        otherPeers.set((peers) => {
+          return peers.filter((p) => p.peerID !== data.peerID)
+        })
+        const userID = link.author as UserID
+        getMutableState(PeerDIDState).peersToDID[data.peerID].set(none)
+        getMutableState(PeerDIDState).DIDToPeers[userID].set((peers) => {
+          return peers.filter((p) => p !== data.peerID)
+        })
+        if (!getState(PeerDIDState).DIDToPeers[userID].length) {
+          getMutableState(PeerDIDState).DIDToPeers[userID].set(none)
+        }
+      }
+    }
+
+    neighbourhood.addSignalHandler(onBroadcastReceived)
+
     return () => {
+      neighbourhood.removeSignalHandler(onBroadcastReceived)
+
       dispatchAction(
         NetworkActions.peerLeft({
           $network: network.id,
@@ -117,31 +251,14 @@ const ConnectionReactor = (props: { networkID: NetworkID }) => {
       removeNetwork(network)
       getMutableState(NetworkState).hostIds[topic].set(none)
     }
-  }, [joinResponse])
-
-  if (!joinResponse.value) return null
-
-  return <PeersReactor networkID={props.networkID} />
-}
-
-const PeersReactor = (props: { networkID: NetworkID }) => {
-  const query = useFind(p2pSignalingPath, {
-    query: {
-      networkID: props.networkID
-    }
-  })
+  }, [])
 
   const otherPeers = useHookstate<{ peerID: PeerID; peerIndex: number; userID: UserID }[]>([])
-
-  useEffect(() => {
-    if (query.status === 'success') {
-      otherPeers.set(query.data.filter((peer) => peer.peerID !== Engine.instance.store.peerID))
-    }
-  }, [query.status])
+  console.log('otherPeers', ...otherPeers.value)
 
   useEffect(() => {
     const interval = setInterval(() => {
-      query.refetch()
+      // @todo heartbeat
     }, 1000)
     return () => {
       clearInterval(interval)
@@ -153,40 +270,63 @@ const PeersReactor = (props: { networkID: NetworkID }) => {
       {otherPeers.value.map((peer) => (
         <PeerReactor
           key={peer.peerID}
+          otherPeers={otherPeers}
           peerID={peer.peerID}
           peerIndex={peer.peerIndex}
           userID={peer.userID}
           networkID={props.networkID}
+          neighbourhoodProxy={neighbourhood}
+          sendMessage={sendMessage}
         />
       ))}
     </>
   )
 }
 
-const sendMessage: SendMessageType = (networkID: NetworkID, toPeerID: PeerID, message: MessageTypes) => {
-  // console.log('sendMessage', instanceID, toPeerID, message)
-  API.instance.service(p2pSignalingPath).patch(null, {
-    networkID: networkID,
-    targetPeerID: toPeerID,
-    message
-  })
-}
-
-const PeerReactor = (props: { peerID: PeerID; peerIndex: number; userID: UserID; networkID: NetworkID }) => {
+const PeerReactor = (props: {
+  otherPeers: State<{ peerID: PeerID; peerIndex: number; userID: UserID }[]>
+  peerID: PeerID
+  peerIndex: number
+  userID: UserID
+  networkID: NetworkID
+  neighbourhoodProxy: NeighbourhoodProxy
+  sendMessage
+}) => {
   const network = getState(NetworkState).networks[props.networkID]
 
-  useWebRTCPeerConnection(network, props.peerID, props.peerIndex, props.userID, sendMessage)
+  useWebRTCPeerConnection(network, props.peerID, props.peerIndex, props.userID, props.sendMessage)
+
+  /** We need an extra custom on leave callback to clear up our own state if a peer leaves rudely */
+  const peerConnectionState = useMutableState(RTCPeerConnectionState)[props.networkID][props.peerID]?.value
+  const isready = peerConnectionState && peerConnectionState.ready && peerConnectionState.dataChannels['actions']
 
   useEffect(() => {
-    API.instance.service(p2pSignalingPath).on('patched', (data) => {
-      // need to ignore messages from self
-      if (data.fromPeerID !== props.peerID) return
-      if (data.targetPeerID !== Engine.instance.store.peerID) return
-      if (data.networkID !== network.id) return
+    if (!isready) return
 
-      WebRTCTransportFunctions.onMessage(sendMessage, data.networkID, props.peerID, data.message)
-    })
-  }, [])
+    return () => {
+      props.otherPeers.set((peers) => {
+        return peers.filter((p) => p.peerID !== props.peerID)
+      })
+      getMutableState(PeerDIDState).peersToDID[props.peerID].set(none)
+      getMutableState(PeerDIDState).DIDToPeers[props.userID].set((peers) => {
+        return peers.filter((p) => p !== props.peerID)
+      })
+      if (!getState(PeerDIDState).DIDToPeers[props.userID].length) {
+        getMutableState(PeerDIDState).DIDToPeers[props.userID].set(none)
+      }
+    }
+  }, [isready])
 
   return null
+}
+
+function getExpressionData(data: any) {
+  let parsedData
+  try {
+    parsedData = Literal.fromUrl(data).get()
+  } catch (e) {
+    parsedData = data
+  } finally {
+    return parsedData
+  }
 }
