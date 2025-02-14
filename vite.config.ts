@@ -39,7 +39,8 @@ const assets = [
 const currentDirectory = process.cwd()
 console.log(`Copying assets to ${currentDirectory}/public`)
 
-fs.rmSync(path.join(currentDirectory, 'public/projects'), { recursive: true })
+if (fs.existsSync(path.join(currentDirectory, 'public/projects')))
+  fs.rmSync(path.join(currentDirectory, 'public/projects'), { recursive: true })
 
 // copy assets form appRootPath.path/path to public, ensuring folder structure is maintained
 for (const asset of assets) {
