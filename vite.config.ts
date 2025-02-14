@@ -30,6 +30,26 @@ import path from 'path'
 import { defineConfig, UserConfig } from 'vite'
 import manifestJson from './manifest.json'
 
+const assets = [
+  'projects/ir-engine/default-project/assets/avatars/irRobot.vrm',
+  'projects/ir-engine/default-project/assets/animations/emotes.glb',
+  'projects/ir-engine/default-project/assets/animations/locomotion.glb'
+]
+
+const currentDirectory = process.cwd()
+console.log(`Copying assets to ${currentDirectory}/public`)
+
+fs.rmSync(path.join(currentDirectory, 'public/projects'), { recursive: true })
+
+// copy assets form appRootPath.path/path to public, ensuring folder structure is maintained
+for (const asset of assets) {
+  const assetPath = path.join(packageRoot.path, 'packages/projects', asset)
+  const assetPublicPath = path.join(currentDirectory, 'public', asset)
+  fs.mkdirSync(path.dirname(assetPublicPath), { recursive: true })
+  fs.copyFileSync(assetPath, assetPublicPath)
+  console.log(`Copied asset ${assetPath} to ${assetPublicPath}`)
+}
+
 export default defineConfig(async ({ command }) => {
   dotenv.config({
     path: packageRoot.path + '/.env.local'

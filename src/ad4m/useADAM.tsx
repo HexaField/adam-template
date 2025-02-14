@@ -1,5 +1,5 @@
 import { Ad4mClient, Agent } from '@coasys/ad4m'
-import Ad4mConnectUI, { getAd4mClient } from '@coasys/ad4m-connect'
+import Ad4mConnectUI, { Ad4mConnectElement, getAd4mClient } from '@coasys/ad4m-connect'
 import { defineState, getMutableState, useHookstate, useMutableState } from '@ir-engine/hyperflux'
 import { useEffect } from 'react'
 
@@ -14,20 +14,20 @@ export const AdamClientState = defineState({
         appUrl: window.location.origin,
         appDomain: window.location.origin,
         appIconPath: window.location.origin + '/icon.png',
+        // domain: process.env.BASE_URL
         capabilities: [{ with: { domain: '*', pointers: ['*'] }, can: ['*'] }],
         hosting: false,
         mobile: true
       })
-    }).value
+    }).value as Ad4mConnectElement
 
     const authenticatedState = useHookstate(false)
 
     useEffect(() => {
-      document.body.style.pointerEvents = 'all'
+      ad4mConnect.style.pointerEvents = 'all'
 
       ad4mConnect.isAuthenticated().then((authenticated) => {
         authenticatedState.set(authenticated)
-        document.body.style.pointerEvents = 'none'
       })
     }, [])
 

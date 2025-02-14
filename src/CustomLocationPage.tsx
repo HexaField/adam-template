@@ -1,4 +1,5 @@
 import '@ir-engine/client/src/engine'
+import '@ir-engine/engine'
 
 import Debug from '@ir-engine/client-core/src/components/Debug'
 import { getMutableState, useMutableState, useReactiveRef, UserID } from '@ir-engine/hyperflux'
@@ -6,16 +7,26 @@ import { useSpatialEngine } from '@ir-engine/spatial/src/initializeEngine'
 import { useEngineCanvas } from '@ir-engine/spatial/src/renderer/functions/useEngineCanvas'
 
 import { EngineState } from '@ir-engine/ecs'
+import { DomainConfigState } from '@ir-engine/engine/src/assets/state/DomainConfigState'
 import React, { useEffect } from 'react'
 import { AgentState } from './ad4m/useADAM'
+import { NeighbourhoodNetworkState } from './ad4m/useNeighbourhoodNetwork'
 import { PerspectivesState } from './ad4m/usePerspectives'
-import { NeighbourhoodNetworkState } from './network/useNeighbourhoodNetwork'
 
 export default function Template() {
   const [ref, setRef] = useReactiveRef()
 
   useSpatialEngine()
   useEngineCanvas(ref)
+
+  useEffect(() => {
+    const domain =
+      (process.env.APP_ENV === 'development'
+        ? 'https://' + process.env.VITE_APP_HOST + ':' + process.env.VITE_APP_PORT
+        : process.env.BASE_URL) ?? location.origin
+    getMutableState(DomainConfigState).publicDomain.set(domain)
+    getMutableState(DomainConfigState).cloudDomain.set(domain)
+  }, [])
 
   const agent = useMutableState(AgentState).value
 
@@ -41,7 +52,7 @@ const NeighbourhoodSelector = () => {
   const onJoinNeighbourhood = (uuid: string) => getMutableState(NeighbourhoodNetworkState).set([uuid])
 
   return (
-    <div style={{ display: 'flex', width: '100%', height: '100%', flexDirection: 'column', pointerEvents: 'all' }}>
+    <div style={{ display: 'flex', width: '30%', height: 'auto', flexDirection: 'column', pointerEvents: 'all' }}>
       <h1>Neighbourhood Selector</h1>
       <p>Choose a neighbourhood to join</p>
       {Object.values(neighbourhoods).map((n) => (

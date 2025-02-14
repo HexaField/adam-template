@@ -29,9 +29,9 @@ import {
   useWebRTCPeerConnection
 } from '@ir-engine/network'
 import React, { useEffect } from 'react'
-import { AgentState } from '../ad4m/useADAM'
-import { PerspectivesState } from '../ad4m/usePerspectives'
 import { useBasicScene } from '../world/BasicScene'
+import { AgentState } from './useADAM'
+import { PerspectivesState } from './usePerspectives'
 
 const IS_ANYONE_HERE = 'is-anyone-here'
 const I_AM_HERE = 'i-am-here'
