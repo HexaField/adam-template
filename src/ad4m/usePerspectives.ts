@@ -21,7 +21,7 @@ export const PerspectivesState = defineState({
 
       // Get all perspectives
       client.perspective.all().then((allPerspectives) => {
-        console.log({allPerspectives})
+        console.log({ allPerspectives })
         state.perspectives.set(
           allPerspectives.reduce((acc, p) => {
             return { ...acc, [p.uuid]: p }
