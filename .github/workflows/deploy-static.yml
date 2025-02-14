@@ -25,7 +25,7 @@ jobs:
           if [ ${{ secrets.STATIC_BUILD_ENABLED }} == 'true' ]; then
             echo "ok=enabled" >> $GITHUB_OUTPUT
           fi
-  deploy-static:
+  build:
     needs:
       - secrets-gate
     if: ${{ needs.secrets-gate.outputs.ok == 'enabled'}}
@@ -60,12 +60,22 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v3
         with:
-          path: './packages/projects/projects/${{ github.repository }}/dist'
+          path: './packages/projects/projects/${{ github.repository }}/dist/'
       - name: Sleep for 15 seconds
         run: sleep 15s
         shell: bash
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v4
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
