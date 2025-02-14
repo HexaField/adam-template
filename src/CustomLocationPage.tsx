@@ -21,9 +21,9 @@ export default function Template() {
 
   useEffect(() => {
     const domain =
-      (process.env.APP_ENV === 'development'
-        ? 'https://' + process.env.VITE_APP_HOST + ':' + process.env.VITE_APP_PORT
-        : process.env.BASE_URL) ?? location.origin
+      globalThis.process.env.APP_ENV === 'development'
+        ? 'https://' + globalThis.process.env.VITE_APP_HOST + ':' + globalThis.process.env.VITE_APP_PORT
+        : globalThis.process.env.BASE_URL!
     getMutableState(DomainConfigState).publicDomain.set(domain)
     getMutableState(DomainConfigState).cloudDomain.set(domain)
   }, [])
