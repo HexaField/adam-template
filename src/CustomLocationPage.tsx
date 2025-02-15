@@ -6,6 +6,7 @@ import { getMutableState, useMutableState, useReactiveRef, UserID } from '@ir-en
 import { useSpatialEngine } from '@ir-engine/spatial/src/initializeEngine'
 import { useEngineCanvas } from '@ir-engine/spatial/src/renderer/functions/useEngineCanvas'
 
+import config from '@ir-engine/common/src/config'
 import { EngineState } from '@ir-engine/ecs'
 import { DomainConfigState } from '@ir-engine/engine/src/assets/state/DomainConfigState'
 import React, { useEffect } from 'react'
@@ -13,10 +14,10 @@ import { AgentState } from './ad4m/useADAM'
 import { NeighbourhoodNetworkState } from './ad4m/useNeighbourhoodNetwork'
 import { PerspectivesState } from './ad4m/usePerspectives'
 
-const domain =
-  globalThis.process.env['APP_ENV'] === 'development'
-    ? 'https://' + globalThis.process.env['VITE_APP_HOST'] + ':' + globalThis.process.env['VITE_APP_PORT']
-    : globalThis.process.env['BASE_URL']!
+//@ts-ignore
+const baseURL = import.meta.env.BASE_URL
+
+const domain = config.client.appEnv === 'development' ? config.client.clientUrl : baseURL
 
 getMutableState(DomainConfigState).publicDomain.set(domain)
 getMutableState(DomainConfigState).cloudDomain.set(domain)

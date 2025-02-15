@@ -36,6 +36,9 @@ import '@ir-engine/client/src/themes/utilities.css'
 
 import { createHyperStore } from '@ir-engine/hyperflux'
 
+// ensure config is imported
+import '@ir-engine/common/src/config'
+
 createHyperStore()
 
 const CustomLocationPage = lazy(() => import('./CustomLocationPage'))
