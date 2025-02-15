@@ -16,8 +16,11 @@ import { PerspectivesState } from './ad4m/usePerspectives'
 
 //@ts-ignore
 const baseURL = import.meta.env.BASE_URL
+console.log('baseURL', baseURL)
 
 const domain = config.client.appEnv === 'development' ? config.client.clientUrl : baseURL
+console.log('domain', domain)
+console.log('config.client', config.client)
 
 getMutableState(DomainConfigState).publicDomain.set(domain)
 getMutableState(DomainConfigState).cloudDomain.set(domain)
