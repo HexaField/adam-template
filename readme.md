@@ -1,6 +1,6 @@
-# adam-template
+# conjure
 
-Build the iR Engine client by itself and connect to others via Coasys/ADAM
+Identity & Multiplayer for iR Engine via Coasys/ADAM
 
 ## Live Example
 - todo
