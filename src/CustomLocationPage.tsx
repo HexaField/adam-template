@@ -18,7 +18,7 @@ import { PerspectivesState } from './ad4m/usePerspectives'
 const baseURL = import.meta.env.BASE_URL
 console.log('baseURL', baseURL)
 
-const domain = config.client.appEnv === 'development' ? config.client.clientUrl : baseURL
+const domain = baseURL === '/' ? config.client.clientUrl : baseURL
 console.log('domain', domain)
 console.log('config.client', config.client)
 
