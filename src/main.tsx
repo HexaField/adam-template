@@ -23,10 +23,6 @@ All portions of the code written by the Infinite Reality Engine team are Copyrig
 Infinite Reality Engine. All Rights Reserved.
 */
 
-// tslint:disable:ordered-imports
-/** @ts-ignore */
-globalThis.process = { env: { ...(import.meta as any).env, APP_ENV: (import.meta as any).env.MODE } }
-
 import React, { lazy } from 'react'
 import { createRoot } from 'react-dom/client'
 
@@ -35,6 +31,10 @@ import '@ir-engine/client/src/themes/components.css'
 import '@ir-engine/client/src/themes/utilities.css'
 
 import { createHyperStore } from '@ir-engine/hyperflux'
+
+// tslint:disable:ordered-imports
+/** @ts-ignore */
+globalThis.process = { env: { ...(import.meta as any).env, APP_ENV: (import.meta as any).env.MODE } }
 
 // ensure config is imported
 import '@ir-engine/common/src/config'
