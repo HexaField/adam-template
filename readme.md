@@ -1,6 +1,6 @@
 # conjure
 
-Identity & Multiplayer for iR Engine via Coasys/ADAM
+Decentralized immersive collaboration powered by iR Engine and ADAM/Holochain
 
 ## Live Example
 - https://conjure.world

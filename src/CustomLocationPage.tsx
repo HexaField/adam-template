@@ -16,11 +16,8 @@ import { PerspectivesState } from './ad4m/usePerspectives'
 
 //@ts-ignore
 const baseURL = import.meta.env.BASE_URL
-console.log('baseURL', baseURL)
 
 const domain = baseURL === '/' ? config.client.clientUrl : baseURL.slice(0, -1)
-console.log('domain', domain)
-console.log('config.client', config.client)
 
 getMutableState(DomainConfigState).publicDomain.set(domain)
 getMutableState(DomainConfigState).cloudDomain.set(domain)
@@ -48,9 +45,7 @@ export default function Template() {
 }
 
 const NeighbourhoodSelector = () => {
-  const { perspectives, neighbourhoods } = useMutableState(PerspectivesState).value
-
-  console.log('perspectives', perspectives, 'neighbourhoods', neighbourhoods)
+  const { neighbourhoods } = useMutableState(PerspectivesState).value
 
   const onJoinNeighbourhood = (uuid: string) => getMutableState(NeighbourhoodNetworkState).set([uuid])
 
@@ -60,7 +55,7 @@ const NeighbourhoodSelector = () => {
       <p>Choose a neighbourhood to join</p>
       {Object.values(neighbourhoods).map((n) => (
         <button key={n.uuid} onClick={() => onJoinNeighbourhood(n.uuid)}>
-          {n.name}
+          - {n.name}
         </button>
       ))}
     </div>
