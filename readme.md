@@ -3,10 +3,10 @@
 Identity & Multiplayer for iR Engine via Coasys/ADAM
 
 ## Live Example
-- todo
+- https://conjure.world
 
 ## Progress 
 - [x] Connect to ADAM
 - [x] Retrieve list of perspectives & neighbourhoods
-- [ ] implement p2p signalling (how do we do peerIndex?)
+- [x] implement p2p signalling
 - [ ] spawn and persist world objects in the neighbourhood

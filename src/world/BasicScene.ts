@@ -22,7 +22,6 @@ const createSceneGLTF = (): GLTF.IGLTF => ({
       name: 'Settings',
       extensions: {
         EE_uuid: '0d5a20e1-abe2-455e-9963-d5e1e19fca19',
-
         EE_fog: {
           type: 'linear',
           color: '#FFFFFF',
@@ -32,7 +31,6 @@ const createSceneGLTF = (): GLTF.IGLTF => ({
           timeScale: 1,
           height: 0.05
         },
-
         EE_render_settings: {
           primaryLight: 'cb045cfd-8daf-4a2b-b764-35625be54a11',
           csm: true,
@@ -44,7 +42,7 @@ const createSceneGLTF = (): GLTF.IGLTF => ({
       }
     },
     {
-      matrix: [100, 0, 0, 0, 0, 0.1, 0, 0, 0, 0, 100, 0, 0, 1, 0, 1],
+      matrix: [100, 0, 0, 0, 0, 0.1, 0, 0, 0, 0, 100, 0, 0, 0, 0, 1],
       name: 'Rigidbody',
       extensions: {
         EE_uuid: '685c48da-e2a0-4a9a-af7c-c5a3c187c99a',
