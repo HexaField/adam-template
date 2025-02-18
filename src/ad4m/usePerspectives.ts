@@ -9,7 +9,7 @@ export const PerspectivesState = defineState({
   name: 'hexafield.adam-template.PerspectiveState',
   initial: {
     perspectives: {} as Record<UUID, PerspectiveProxy>,
-    neighbourhoods: {} as Record<UUID, PerspectiveProxy>
+    neighbourhoods: {} as Record<string, PerspectiveProxy>
   },
   reactor: () => {
     const client = useMutableState(AdamClientState).value
@@ -61,7 +61,7 @@ export const PerspectivesState = defineState({
           if (state.perspectives.value[key]?.sharedUrl) {
             return {
               ...acc,
-              [key]: state.perspectives.value[key]
+              [state.perspectives.value[key]?.sharedUrl]: state.perspectives.value[key]
             }
           } else {
             return acc

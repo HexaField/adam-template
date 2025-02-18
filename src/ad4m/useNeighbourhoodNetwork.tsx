@@ -214,7 +214,7 @@ const ConnectionReactor = (props: { networkID: NetworkID }) => {
       if (link.data.predicate === PEER_SIGNAL) {
         const data = getExpressionData(link.data.target) as SignalData
 
-        const fromAgentpeers = getState(PeerDIDState).DIDToPeers?.[link.author]
+        const fromAgentpeers = getState(PeerDIDState).DIDToPeers?.[link.author] ?? []
         if (!fromAgentpeers.includes(data.fromPeerID))
           console.warn('Received message from an agent about a peer who does not control it!')
 

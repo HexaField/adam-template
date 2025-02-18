@@ -54,7 +54,7 @@ const NeighbourhoodSelector = () => {
       <h1>Neighbourhood Selector</h1>
       <p>Choose a neighbourhood to join</p>
       {Object.values(neighbourhoods).map((n) => (
-        <button key={n.uuid} onClick={() => onJoinNeighbourhood(n.uuid)}>
+        <button key={n.sharedUrl} onClick={() => onJoinNeighbourhood(n.sharedUrl!)}>
           - {n.name}
         </button>
       ))}
