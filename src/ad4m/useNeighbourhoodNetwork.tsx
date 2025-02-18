@@ -99,7 +99,8 @@ const ConnectionReactor = (props: { networkID: NetworkID }) => {
   const sendMessage: SendMessageType = (networkID: NetworkID, toPeerID: PeerID, message: MessageTypes) => {
     console.log('sendMessage', networkID, toPeerID, message)
     const toAgentDID = getState(PeerDIDState).peersToDID[toPeerID]
-    neighbourhood.sendSignalU(toAgentDID, {
+    /** @todo use sendSignalU when it is fixed */
+    neighbourhood.sendBroadcastU({
       links: [
         {
           source,
@@ -159,7 +160,8 @@ const ConnectionReactor = (props: { networkID: NetworkID }) => {
     }
 
     const broadcastArrivalResponse = (toAgentID: string) => {
-      neighbourhood.sendSignalU(toAgentID, {
+      /** @todo use sendSignalU when it is fixed */
+      neighbourhood.sendBroadcastU({
         links: [
           {
             source: source,
@@ -175,6 +177,8 @@ const ConnectionReactor = (props: { networkID: NetworkID }) => {
     }
 
     const onBroadcastReceived = (expression: PerspectiveExpression) => {
+      if (expression.author === agent.did) return // ignore messages from self
+
       console.log('onBroadcastReceived', expression)
       const link = expression.data.links[0]
 
