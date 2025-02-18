@@ -107,6 +107,7 @@ const ConnectionReactor = (props: { networkID: NetworkID }) => {
           predicate: PEER_SIGNAL,
           target: Literal.from({
             networkID,
+            fromPeerID: Engine.instance.store.peerID,
             targetPeerID: toPeerID,
             message
           }).toUrl()
@@ -182,7 +183,9 @@ const ConnectionReactor = (props: { networkID: NetworkID }) => {
       console.log('onBroadcastReceived', expression)
       const link = expression.data.links[0]
 
-      if (link.data.predicate === IS_ANYONE_HERE && link.data.source === source) {
+      if (link.data.source !== source) return
+
+      if (link.data.predicate === IS_ANYONE_HERE) {
         // Check if the remote host should create the offer
         // -> If so, create passive connection
         if (link.author.localeCompare(agent.did) < 1) {
@@ -196,8 +199,8 @@ const ConnectionReactor = (props: { networkID: NetworkID }) => {
         broadcastArrivalResponse(link.author)
       }
 
-      if (link.data.predicate === I_AM_HERE && link.data.source === source && link.data.target === agent.did) {
-        const data = getExpressionData(link.data.source) as { peerID: PeerID; peerIndex: number; networkID: NetworkID }
+      if (link.data.predicate === I_AM_HERE) {
+        const data = getExpressionData(link.data.target) as { peerID: PeerID; peerIndex: number; networkID: NetworkID }
         // Check if we should create the offer
         // -> If so, create active connection
         if (link.author.localeCompare(agent.did) > 0) {
@@ -208,7 +211,7 @@ const ConnectionReactor = (props: { networkID: NetworkID }) => {
         }
       }
 
-      if (link.data.predicate === PEER_SIGNAL && link.data.source === source) {
+      if (link.data.predicate === PEER_SIGNAL) {
         const data = getExpressionData(link.data.target) as SignalData
 
         const fromAgentpeers = getState(PeerDIDState).DIDToPeers?.[link.author]
@@ -222,7 +225,7 @@ const ConnectionReactor = (props: { networkID: NetworkID }) => {
         WebRTCTransportFunctions.onMessage(sendMessage, data.networkID, data.fromPeerID, data.message)
       }
 
-      if (link.data.predicate === LEAVE && link.data.source === source) {
+      if (link.data.predicate === LEAVE) {
         const data = getExpressionData(link.data.target) as { peerID: PeerID }
         otherPeers.set((peers) => {
           return peers.filter((p) => p.peerID !== data.peerID)
@@ -294,7 +297,7 @@ const PeerReactor = (props: {
   userID: UserID
   networkID: NetworkID
   neighbourhoodProxy: NeighbourhoodProxy
-  sendMessage
+  sendMessage: SendMessageType
 }) => {
   const network = getState(NetworkState).networks[props.networkID]
 
