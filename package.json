@@ -4,7 +4,7 @@
   "description": "",
   "main": "",
   "scripts": {
-    "test": "exit 0",
+    "test": "cross-env TEST=true vitest run --config=../../../../../vitest.client.config.ts",
     "check-errors": "tsc --noemit",
     "dev": "cross-env APP_ENV=development NODE_OPTIONS=--max_old_space_size=20480 vite",
     "build": "cross-env NODE_OPTIONS=--max_old_space_size=10240 vite build",
@@ -21,7 +21,9 @@
     "@coasys/ad4m": "0.10.1-rc8",
     "@coasys/ad4m-connect": "0.10.1-rc8"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@coasys/ad4m-test": "0.10.1-rc8"
+  },
   "license": "ISC",
   "pre-commit": [
     "format-staged"
